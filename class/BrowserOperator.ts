@@ -31,6 +31,7 @@ export class BrowserOperator {
   // 終了処理
   finalize() {
     this.browser!.close();
+    console.log(`シートの転記処理が完了しました。`);
   }
 
   private async _loadPage() {

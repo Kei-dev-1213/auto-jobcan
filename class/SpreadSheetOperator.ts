@@ -43,6 +43,7 @@ export class SpreadSheetOperator {
     console.log(`${this.sheet.title}シートの転記を開始します。`);
   }
 
+  // 勤務時間取得
   private async _fetchWorkingHours() {
     const rows = await this.sheet!.getRows();
     for (const row of rows) {
@@ -56,7 +57,13 @@ export class SpreadSheetOperator {
     }
   }
 
-  // 日付指定
+  // 勤務時間取得（水平）
+  // private async _fetchWorkingHoursByHorizontal() {
+  // await this.sheet!.loadCells("A1:C32");
+  // console.log(await this.sheet!.getCell(0, 1).value);
+  // }
+
+  // 日付を指定して取得
   getWorkingHour(date: string): WorkingHour | undefined {
     return this.workingHours.find((wHour) => wHour.date === date);
   }
