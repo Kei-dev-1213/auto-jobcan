@@ -32,6 +32,10 @@ jobs:
         run: |
           echo "${{ secrets.AUTH_GOOGLE_KEY }}" | base64 -d > ./google-key.json
           echo "AUTH_GOOGLE_KEY=${{ github.workspace }}/google-key.json" >> $GITHUB_ENV
+      - name: Debug AUTH_GOOGLE_KEY
+        run: |
+          echo "AUTH_GOOGLE_KEY: $AUTH_GOOGLE_KEY"
+          ls -l $AUTH_GOOGLE_KEY
 
       - name: run batch process
         run: bun index.ts
