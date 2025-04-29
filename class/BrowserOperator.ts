@@ -42,13 +42,13 @@ export class BrowserOperator {
   async login() {
     // 勤怠会社ID
     await this.page!.waitForSelector("#client_id");
-    await this.page!.type("#client_id", process.env.COMPANY!);
+    await this.page!.type("#client_id", process.env.JOBCAN_AUTH_COMPANY!);
     // メールアドレス
     await this.page!.waitForSelector("#email");
-    await this.page!.type("#email", process.env.EMAIL!);
+    await this.page!.type("#email", process.env.JOBCAN_AUTH_EMAIL!);
     // パスワード
     await this.page!.waitForSelector("#password");
-    await this.page!.type("#password", process.env.PASSWORD!);
+    await this.page!.type("#password", process.env.JOBCAN_AUTH_PASSWORD!);
 
     // ログイン
     await this.page!.click("body > div.login-content > div > div > form > div:nth-child(6) > button");

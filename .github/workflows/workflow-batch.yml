@@ -1,10 +1,14 @@
 name: Jobcan Scheduled Execution
 
 env:
+  #スプレッドシート認証情報
+  AUTH_GOOGLE_EMAIL: ${{ secrets.AUTH_GOOGLE_EMAIL }}
+  AUTH_GOOGLE_KEY: ${{ secrets.AUTH_GOOGLE_KEY }}
+  # ジョブカン情報
   JOBCAN_URL: ${{ secrets.JOBCAN_URL }}
-  COMPANY: ${{ secrets.COMPANY }}
-  EMAIL: ${{ secrets.EMAIL }}
-  PASSWORD: ${{ secrets.PASSWORD }}
+  JOBCAN_AUTH_COMPANY: ${{ secrets.JOBCAN_AUTH_COMPANY }}
+  JOBCAN_AUTH_EMAIL: ${{ secrets.JOBCAN_AUTH_EMAIL }}
+  JOBCAN_AUTH_PASSWORD: ${{ secrets.JOBCAN_AUTH_PASSWORD }}
 
 on:
   workflow_dispatch:
