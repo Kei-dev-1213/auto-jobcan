@@ -1,5 +1,4 @@
 import puppeteer, { Browser, Page } from "puppeteer";
-import { Util } from "../util";
 
 export class BrowserOperator {
   private browser: Browser | undefined;
