@@ -3,7 +3,6 @@ name: Jobcan Scheduled Execution
 env:
   #スプレッドシート認証情報
   AUTH_GOOGLE_EMAIL: ${{ secrets.AUTH_GOOGLE_EMAIL }}
-  AUTH_GOOGLE_KEY: ${{ secrets.AUTH_GOOGLE_KEY }}
   # ジョブカン情報
   JOBCAN_URL: ${{ secrets.JOBCAN_URL }}
   JOBCAN_AUTH_COMPANY: ${{ secrets.JOBCAN_AUTH_COMPANY }}
@@ -29,6 +28,10 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+      - name: Decode Firebase service account key
+        run: |
+          echo "${{ secrets.AUTH_GOOGLE_KEY }}" | base64 -d > ./google-key.json
+          echo "AUTH_GOOGLE_KEY=${{ github.workspace }}/google-key.json" >> $GITHUB_ENV
 
       - name: run batch process
         run: bun index.ts
