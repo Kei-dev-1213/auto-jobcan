@@ -27,6 +27,7 @@ export class SpreadSheetOperator {
           scopes: ["https://www.googleapis.com/auth/spreadsheets"],
         })
       );
+      console.log(process.env.AUTH_GOOGLE_KEY!);
       await this.doc.loadInfo();
       await this._loadSheet();
       await this._fetchWorkingHours(); // 縦
