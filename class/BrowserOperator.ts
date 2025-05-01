@@ -15,11 +15,11 @@ export class BrowserOperator {
   // 初期化処理
   private async initialize() {
     try {
-      this.browser = await puppeteer.launch({ headless: false, slowMo: 50 });
-      // this.browser = await puppeteer.launch({
-      //   slowMo: 50,
-      //   args: ["--no-sandbox", "--disable-setuid-sandbox"], // サンドボックス無効化
-      // });
+      // this.browser = await puppeteer.launch({ headless: false, slowMo: 50 });
+      this.browser = await puppeteer.launch({
+        slowMo: 50,
+        args: ["--no-sandbox", "--disable-setuid-sandbox"], // サンドボックス無効化
+      });
       this.page = await this.browser.newPage();
       await this._loadPage();
     } catch (e) {
