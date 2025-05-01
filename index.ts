@@ -19,16 +19,20 @@ import { Util } from "./util";
       const _sTime = Util.timeToHHMM(_wHour.startTime);
       const _fTime = Util.timeToHHMM(_wHour.finishTime);
 
-      // 編集画面を開く
-      await browser.toSpecificEditPage(_date);
+      // 未打刻の場合のみ
+      if (!(await browser.isStamped(_date))) {
+        // 未来日ではない場合のみ
+        if (!(await browser.isFutureDate(_date))) {
+          // 日付編集画面を開く
+          await browser.openSpecificDateEditPage(_date);
 
-      // 編集対象の場合のみ
-      if (await browser.isTarget()) {
-        // 打刻
-        await browser.regist(_sTime, _fTime);
-        console.log(`${_date}を開始時刻${_sTime}、終了時刻を${_fTime}で打刻しました。`);
-      } else {
-        console.log(`${_date}は編集対象外のため打刻しません。`);
+          // 打刻
+          await browser.regist(_sTime, _fTime);
+          console.log(`${_date}を開始時刻${_sTime}、終了時刻を${_fTime}で打刻しました。`);
+        } else {
+          console.log(`${_date}は未来日のため打刻しません。`);
+          break;
+        }
       }
     }
 

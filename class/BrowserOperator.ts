@@ -15,11 +15,11 @@ export class BrowserOperator {
   // 初期化処理
   private async initialize() {
     try {
-      // this.browser = await puppeteer.launch({ headless: false, slowMo: 50 });
-      this.browser = await puppeteer.launch({
-        slowMo: 50,
-        args: ["--no-sandbox", "--disable-setuid-sandbox"], // サンドボックス無効化
-      });
+      this.browser = await puppeteer.launch({ headless: false, slowMo: 50 });
+      // this.browser = await puppeteer.launch({
+      //   slowMo: 50,
+      //   args: ["--no-sandbox", "--disable-setuid-sandbox"], // サンドボックス無効化
+      // });
       this.page = await this.browser.newPage();
       await this._loadPage();
     } catch (e) {
@@ -54,19 +54,42 @@ export class BrowserOperator {
     await this.page!.click("body > div.login-content > div > div > form > div:nth-child(6) > button");
   }
 
+  // 特定の日付ページを開く
+  async openSpecificDatePage(date: string) {
+    await this.page!.goto(`https://ssl.jobcan.jp/m/work/accessrecord?recordDay=${date}`);
+  }
+
   // 特定の日付編集ページを開く
-  async toSpecificEditPage(date: string) {
+  async openSpecificDateEditPage(date: string) {
     await this.page!.goto(`https://ssl.jobcan.jp/m/work/accessrecord?recordDay=${date}&_m=edit`);
   }
 
-  // 編集対象かどうか
-  async isTarget() {
-    const isNGMessage = await this.page!.evaluate(() => {
+  // 打刻済かどうか
+  async isStamped(_date: string) {
+    // 編集画面を開く
+    await this.openSpecificDatePage(_date);
+
+    const hasMessage = await this.page!.evaluate(() => {
+      return document.body.innerText.includes("出退勤がありません。");
+    });
+
+    if (!hasMessage) {
+      return true;
+    }
+
+    return false;
+  }
+
+  // 未来日かどうか
+  async isFutureDate(_date: string) {
+    // 編集画面を開く
+    await this.openSpecificDateEditPage(_date);
+
+    const hasMessage = await this.page!.evaluate(() => {
       return document.body.innerText.includes("この日付は打刻修正できません。");
     });
 
-    // 存在しない場合のみ
-    if (!isNGMessage) {
+    if (hasMessage) {
       return true;
     }
 

@@ -37,7 +37,7 @@ export class SpreadSheetOperator {
   }
 
   private async _loadSheet() {
-    const targetYM = Util.getLastMonthYYYYMM();
+    const targetYM = Util.getCurrentYYYYMM();
     this.sheet = this.doc!.sheetsByTitle[targetYM];
     if (!this.sheet) {
       throw new Error(`「${targetYM}」シートが存在しません。`);
