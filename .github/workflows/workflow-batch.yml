@@ -12,7 +12,8 @@ env:
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"
+    # 毎日午前5時（JST）に実行
+    - cron: "0 20 * * *"
 
 jobs:
   Run-Batch-Process:
@@ -28,6 +29,7 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
       - name: Decode Firebase service account key
         run: |
           echo "${{ secrets.ENCRYPTED_AUTH_GOOGLE_KEY }}" | base64 -d > ./google-key.json
