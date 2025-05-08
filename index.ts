@@ -4,9 +4,12 @@ import { Util } from "./util";
 
 // 即時実行
 (async () => {
+  // 引数の年月
+  const [, , yyyymm] = Bun.argv;
+
   try {
     // スプレッドシート
-    const sheet = await SpreadSheetOperator.create();
+    const sheet = await SpreadSheetOperator.create(yyyymm);
     const workingHours = sheet.getWorkingHours();
 
     // ブラウザ操作

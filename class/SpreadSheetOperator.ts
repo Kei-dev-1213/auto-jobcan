@@ -9,14 +9,14 @@ export class SpreadSheetOperator {
 
   private constructor() {}
 
-  static async create(): Promise<SpreadSheetOperator> {
+  static async create(yyyymm: string): Promise<SpreadSheetOperator> {
     const instance = new SpreadSheetOperator();
-    await instance.initialize();
+    await instance.initialize(yyyymm ?? Util.getCurrentYYYYMM());
     return instance;
   }
 
   // 初期化処理
-  private async initialize() {
+  private async initialize(yyyymm: string) {
     try {
       this.doc = new GoogleSpreadsheet(
         "1KSvDmZ4XFjwPlIFUBCcw43xSz24ROJSOeTqOiNqvM0g",
@@ -28,7 +28,7 @@ export class SpreadSheetOperator {
         })
       );
       await this.doc.loadInfo();
-      await this._loadSheet();
+      await this._loadSheet(yyyymm);
       await this._fetchWorkingHours(); // 縦
     } catch (e) {
       console.error("SpreadSheetOperatorの初期化中にエラーが発生しました:", e);
@@ -36,8 +36,8 @@ export class SpreadSheetOperator {
     }
   }
 
-  private async _loadSheet() {
-    const targetYM = Util.getCurrentYYYYMM();
+  private async _loadSheet(yyyymm: string) {
+    const targetYM = yyyymm;
     this.sheet = this.doc!.sheetsByTitle[targetYM];
     if (!this.sheet) {
       throw new Error(`「${targetYM}」シートが存在しません。`);
