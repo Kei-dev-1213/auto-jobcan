@@ -1,4 +1,4 @@
-name: Jobcan Scheduled Execution
+name: Jobcan Last Month Execution
 
 env:
   #スプレッドシート認証情報
