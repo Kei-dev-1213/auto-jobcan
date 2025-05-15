@@ -1,6 +1,5 @@
 import { JWT } from "google-auth-library";
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from "google-spreadsheet";
-import { Util } from "../util";
 
 export class SpreadSheetOperator {
   private doc: GoogleSpreadsheet | undefined;
