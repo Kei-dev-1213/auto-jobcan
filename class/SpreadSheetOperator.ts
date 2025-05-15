@@ -11,7 +11,7 @@ export class SpreadSheetOperator {
 
   static async create(yyyymm: string): Promise<SpreadSheetOperator> {
     const instance = new SpreadSheetOperator();
-    await instance.initialize(yyyymm ?? Util.getCurrentYYYYMM());
+    await instance.initialize(yyyymm);
     return instance;
   }
 

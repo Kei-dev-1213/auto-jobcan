@@ -9,7 +9,7 @@ import { Util } from "./util";
 
   try {
     // スプレッドシート
-    const sheet = await SpreadSheetOperator.create(yyyymm);
+    const sheet = await SpreadSheetOperator.create(yyyymm ?? Util.getCurrentYYYYMM());
     const workingHours = sheet.getWorkingHours();
 
     // ブラウザ操作
