@@ -69,11 +69,12 @@ export class BrowserOperator {
     // 編集画面を開く
     await this.openSpecificDatePage(_date);
 
-    const hasMessage = await this.page!.evaluate(() => {
-      return document.body.innerText.includes("出退勤がありません。");
-    });
-
-    if (!hasMessage) {
+    // 特定文言の有無
+    if (
+      !(await this.page!.evaluate(() => {
+        return document.body.innerText.includes("出退勤がありません。");
+      }))
+    ) {
       return true;
     }
 
@@ -85,11 +86,12 @@ export class BrowserOperator {
     // 編集画面を開く
     await this.openSpecificDateEditPage(_date);
 
-    const hasMessage = await this.page!.evaluate(() => {
-      return document.body.innerText.includes("この日付は打刻修正できません。");
-    });
-
-    if (hasMessage) {
+    // 特定文言の有無
+    if (
+      await this.page!.evaluate(() => {
+        return document.body.innerText.includes("この日付は打刻修正できません。");
+      })
+    ) {
       return true;
     }
 
