@@ -31,7 +31,6 @@ export class BrowserOperator {
   // 終了処理
   finalize() {
     this.browser!.close();
-    console.log(`シートの転記処理が完了しました。`);
   }
 
   private async _loadPage() {
@@ -98,7 +97,7 @@ export class BrowserOperator {
     return false;
   }
 
-  async regist(sTime: string, fTime: string) {
+  async stamp(sTime: string, fTime: string) {
     // 開始時刻
     await this.page!.waitForSelector("#time1");
     await this.page!.type("#time1", sTime);

@@ -17,29 +17,32 @@ import { Util } from "./util";
     await browser.login(); // ログイン
 
     // スプレッドシートの日付分繰り返し
+    let count = 0;
     for (const _wHour of workingHours) {
-      const _date = Util.toYYYYMMDD(_wHour.date);
-      const _sTime = Util.timeToHHMM(_wHour.startTime);
-      const _fTime = Util.timeToHHMM(_wHour.finishTime);
+      const { date, startTime, finishTime } = _wHour;
 
       // 未打刻の場合のみ
-      if (!(await browser.isStamped(_date))) {
+      if (!(await browser.isStamped(date))) {
         // 未来日ではない場合のみ
-        if (!(await browser.isFutureDate(_date))) {
+        if (!(await browser.isFutureDate(date))) {
           // 日付編集画面を開く
-          await browser.openSpecificDateEditPage(_date);
+          await browser.openSpecificDateEditPage(date);
 
           // 打刻
-          await browser.regist(_sTime, _fTime);
-          console.log(`${_date}を開始時刻${_sTime}、終了時刻を${_fTime}で打刻しました。`);
+          await browser.stamp(startTime, finishTime);
+          console.log(`${date}を開始時刻${startTime}、終了時刻を${finishTime}で打刻しました。`);
+          ++count;
         } else {
-          console.log(`${_date}は未来日のため打刻しません。`);
+          console.log(`${date}は未来日のため打刻しません。`);
           break;
         }
+      } else {
+        console.log(`${date}は打刻済です。`);
       }
     }
 
     await browser.finalize(); // 終了
+    console.log(`シートの転記処理が完了しました。打刻日数：${count}件`);
   } catch (e) {
     console.error("ジョブカンの転記処理が異常終了しました。", e);
   }

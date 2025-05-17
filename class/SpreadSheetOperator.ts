@@ -1,5 +1,6 @@
 import { JWT } from "google-auth-library";
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from "google-spreadsheet";
+import { Util } from "../util";
 
 export class SpreadSheetOperator {
   private doc: GoogleSpreadsheet | undefined;
@@ -49,9 +50,9 @@ export class SpreadSheetOperator {
     const rows = await this.sheet!.getRows();
     for (const row of rows) {
       const rowObject = row.toObject();
-      const date = (rowObject["日付"] ?? "").trim();
-      const startTime = (rowObject["開始時間"] ?? "").trim();
-      const finishTime = (rowObject["終了時間"] ?? "").trim();
+      const date = Util.toYYYYMMDD((rowObject["日付"] ?? "").trim());
+      const startTime = Util.timeToHHMM((rowObject["開始時間"] ?? "").trim());
+      const finishTime = Util.timeToHHMM((rowObject["終了時間"] ?? "").trim());
       if (date && startTime && finishTime) {
         this.workingHours.push(new WorkingHour(date, startTime, finishTime));
       }

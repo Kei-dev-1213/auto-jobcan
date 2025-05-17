@@ -24,8 +24,12 @@ function toYYYYMMDD(dateStr: string): string {
 
 // 打刻時間を登録できる形式に変換
 function timeToHHMM(timeStr: string): string {
-  const [h, m] = timeStr.split(":");
-  return h.padStart(2, "0") + m.padStart(2, "0");
+  let hhmm = "";
+  try {
+    const [h, m] = timeStr.split(":");
+    hhmm = h.padStart(2, "0") + m.padStart(2, "0");
+  } catch {}
+  return hhmm;
 }
 
 export const Util = { getCurrentYYYYMM, getLastMonthYYYYMM, toYYYYMMDD, timeToHHMM };
