@@ -18,8 +18,12 @@ function getLastMonthYYYYMM(): string {
 
 // 日付形式のハイフンを削除
 function toYYYYMMDD(dateStr: string): string {
-  const [yyyy, mm, dd] = dateStr.split("-");
-  return `${yyyy}${mm}${dd}`;
+  let yyyymmdd = "";
+  try {
+    const [yyyy, mm, dd] = dateStr.split("-");
+    yyyymmdd = `${yyyy}${mm}${dd}`;
+  } catch {}
+  return yyyymmdd;
 }
 
 // 打刻時間を登録できる形式に変換
