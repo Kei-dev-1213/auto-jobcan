@@ -32,7 +32,7 @@ jobs:
       - name: Decode Firebase service account key and set AUTH_GOOGLE_KEY
         run: |
           echo "${{ secrets.ENCRYPTED_AUTH_GOOGLE_KEY }}" | base64 -d > ./google-key.json
-          AUTH_GOOGLE_KEY_CONTENT=$(cat ./google-key.json)
+          AUTH_GOOGLE_KEY_CONTENT=$(cat ./google-key.json | jq -c .)
           echo "AUTH_GOOGLE_KEY=$AUTH_GOOGLE_KEY_CONTENT" >> $GITHUB_ENV
 
       - name: run batch process
