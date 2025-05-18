@@ -4,7 +4,6 @@ env:
   #スプレッドシート認証情報
   AUTH_GOOGLE_EMAIL: ${{ secrets.AUTH_GOOGLE_EMAIL }}
   # ジョブカン情報
-  JOBCAN_URL: ${{ secrets.JOBCAN_URL }}
   JOBCAN_AUTH_COMPANY: ${{ secrets.JOBCAN_AUTH_COMPANY }}
   JOBCAN_AUTH_EMAIL: ${{ secrets.JOBCAN_AUTH_EMAIL }}
   JOBCAN_AUTH_PASSWORD: ${{ secrets.JOBCAN_AUTH_PASSWORD }}

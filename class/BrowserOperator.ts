@@ -34,7 +34,7 @@ export class BrowserOperator {
   }
 
   private async _loadPage() {
-    await this.page!.goto(process.env.JOBCAN_URL!);
+    await this.page!.goto("https://ssl.jobcan.jp/login/mb-employee-global?redirect_to=%2Fm%2Findex");
   }
 
   // ログイン

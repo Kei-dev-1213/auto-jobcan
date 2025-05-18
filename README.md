@@ -40,7 +40,6 @@ bun run index.ts YYYYMM
 
 **ジョブカン認証情報**
 
-- `JOBCAN_URL`: ジョブカンのログイン URL
 - `JOBCAN_AUTH_COMPANY`: ジョブカンの会社 ID
 - `JOBCAN_AUTH_EMAIL`: ジョブカンのログインメールアドレス
 - `JOBCAN_AUTH_PASSWORD`: ジョブカンのログインパスワード
