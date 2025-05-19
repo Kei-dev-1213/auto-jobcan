@@ -97,7 +97,10 @@ export class BrowserOperator {
     return false;
   }
 
-  async stamp(sTime: string, fTime: string) {
+  async stamp(date: string, sTime: string, fTime: string) {
+    // 日付編集画面を開く
+    await this.openSpecificDateEditPage(date);
+
     // 開始時刻
     await this.page!.waitForSelector("#time1");
     await this.page!.type("#time1", sTime);

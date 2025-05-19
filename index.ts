@@ -25,11 +25,8 @@ import { Util } from "./util";
       if (!(await browser.isStamped(date))) {
         // 未来日ではない場合のみ
         if (!(await browser.isFutureDate(date))) {
-          // 日付編集画面を開く
-          await browser.openSpecificDateEditPage(date);
-
           // 打刻
-          await browser.stamp(startTime, finishTime);
+          await browser.stamp(date, startTime, finishTime);
           console.log(`${date}を開始時刻${startTime}、終了時刻を${finishTime}で打刻しました。`);
           ++count;
         } else {
