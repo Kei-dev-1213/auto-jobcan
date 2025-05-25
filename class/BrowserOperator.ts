@@ -97,6 +97,7 @@ export class BrowserOperator {
     return false;
   }
 
+  // 打刻
   async stamp(date: string, sTime: string, fTime: string) {
     // 日付編集画面を開く
     await this.openSpecificDateEditPage(date);
