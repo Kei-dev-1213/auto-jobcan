@@ -16,35 +16,27 @@ import { Util } from "./util";
     const browser = await BrowserOperator.create();
     await browser.login(); // ログイン
 
-    // スプレッドシートの日付分を並列処理
-    const results = await Promise.all(
-      workingHours.map(async ({ date, startTime, finishTime }) => {
-        try {
-          // 未打刻の場合のみ
-          if (await browser.isStamped(date)) {
-            console.log(`${date}は打刻済です。`);
-            return false;
-          }
+    // スプレッドシートの日付分繰り返し
+    let count = 0;
+    for (const _wHour of workingHours) {
+      const { date, startTime, finishTime } = _wHour;
 
-          // 未来日ではない場合のみ
-          if (await browser.isFutureDate(date)) {
-            console.log(`${date}は未来日のため打刻しません。`);
-            return false;
-          }
-
+      // 未打刻の場合のみ
+      if (!(await browser.isStamped(date))) {
+        // 未来日ではない場合のみ
+        if (!(await browser.isFutureDate(date))) {
           // 打刻
           await browser.stamp(date, startTime, finishTime);
           console.log(`${date}を開始時刻${startTime}、終了時刻を${finishTime}で打刻しました。`);
-          return true;
-        } catch (error) {
-          console.error(`日付 ${date} の処理中にエラーが発生しました:`, error);
-          return false;
+          ++count;
+        } else {
+          console.log(`${date}は未来日のため打刻しません。`);
+          break;
         }
-      })
-    );
-
-    // 打刻成功件数をカウント
-    const count = results.filter((result) => result).length;
+      } else {
+        console.log(`${date}は打刻済です。`);
+      }
+    }
 
     await browser.finalize(); // 終了
     console.log(`シートの転記処理が完了しました。打刻日数：${count}件`);
