@@ -1,5 +1,8 @@
 import { JWT } from "google-auth-library";
-import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from "google-spreadsheet";
+import {
+  GoogleSpreadsheet,
+  GoogleSpreadsheetWorksheet,
+} from "google-spreadsheet";
 import { Util } from "../util";
 
 export class SpreadSheetOperator {
@@ -22,10 +25,10 @@ export class SpreadSheetOperator {
         "1KSvDmZ4XFjwPlIFUBCcw43xSz24ROJSOeTqOiNqvM0g",
         new JWT({
           email: process.env.AUTH_GOOGLE_EMAIL!,
-          key: "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCX00AUwfq1LRQO\nfMRNeIzSBCyRf0YVMTA/UsvohBZ9hCIwoRPtQp6aIJ5Rt290FpFykdgdJEjD+oPO\nzLSVid5vH3SuexMFCAYINq1WYfzDMS0z0Zh7UZaoqdQw4ZIK6D5RD2PCs3ZQCWjM\not5WJBLxog3VcsJ6J/+B8dDRTeBynqAct5UBl1wpH4nV3wD4zHIs1zPaGjbMEFJu\nSWbBHFJBhHXHu1gB3EXkPXQveVUU4BeMyfV4ne8bH8O1HD0+kd0N8DlAq1nQebtU\nd/Rn/2K93WzYAoAdy/Kyxh+ieYZrbsOuquTuzeTD2zIzGoSCYJB4ELyjn8ufMqY9\nxw0OyJVdAgMBAAECggEACSeRae8Bs/eiNEwXoL2PwtYXmIpTv9FgdwusrzolClpz\nnqUHyOWcdJoE5ykoDO2TcD9qXY943RWiPvpJj+lpQnVjbrs4ZrRDe4P4fbNDhMLW\nq+o2cdvLOXj2tMp/04KKHLnQf8accAUGjwLpucihD8rVX1/KaYfh4y72iA2pu/TM\nKU7oJGqUuDCJbscwfbwQBbR/m12WaVn4yI9Lwu5zot9TlsKK046DjATEmh0RckUR\nex4Q8er6l6QPIrFG++vfAYHQV3wNKocoAac0u8a2pmY3wi6hdJRDYPxoCrBnOiYj\nK9Jaq0V2L4UJDG5v852L5SIyewh3P348nJgjB6xOQQKBgQDMGqDRnzluEOfZsyeG\nlKu2l99j89uc036UJyQ4bRcfijemjLzItUGAi2ugHLzeuDyEkFOynM9AoS/Q1Qyg\neX1rVi8jjLuCsSTABkSVHfzZYVyq8xNQXbqa1yXeJaidbUBmunY0J4AzeXoLUkAB\ne2Tir3U06Jd7TRRCWJINPrybLQKBgQC+bbteY3btax92Tq9+C6RShO7UjQwxevPF\nwh6S69Btmqsf/MXWOuAPZwIdvShrQxpQyaiM13NC9iYDf1BD1PB+lcbLowZSLBLC\nuCDcy85ANtnjZ31X7HDK5WEBIWZ6OMOqrKFHJF3FssYA4qhYWoVJoOlLZyRpSVHt\nzqhFrrSA8QKBgQCWLFF/asP6s/2jNCo031aodn4rMNW5QfO0VkhULBADaNMhfBO7\nKYIUboC1we9FgBEnCHpMxQvI5dAku10bBci+HR957KZatrPvha0YeoP7/aMNNORV\nEWGnY/28wcCadDQaYb9vCFFPjmW5xr7JWF0WXTrDvw8V7dSmLDzp+esT0QKBgQCH\nm4EIsHAqllRrXZFfg07bbMrfFiqOue4K8DfxjHh69N/UAZ+o9XhFv6ckImY8LCb7\nTP/4fB0anEtpxioUg/lXS7WrokaIEdayT4kncwNHe0gixrnd+QRBmKNBuNVPSEke\nq5yWGvGkLbEPRFl5wcyVKD+6cJLfX1U2sinmpYjpIQKBgQC24hjlQf7MV9HLyio+\nu2Eh8nYBHx2WPEpjeYILUG9tDX/eZPrUPyhKMGaajjH7AenTNfO8+Ii93qBQnh2Q\nmDMfu4do1fVun5kF20z3PCfWoqjC4nQBte69OuEHoaKycfvT7a1jfE+RbMygeVXL\nOqg7PiNJ99eCW71LSaDKNFp3mg==\n-----END PRIVATE KEY-----\n",
+          key: "-----BEGIN PRIVATE KEY-----\nMIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQC39ar2m1CBriKZ\nHV7I5ocpQcyeFHmdHY5SD4VOsYbc1bO+e1lU54MuZSj+LVHjXV8eQjpCAc0dGGo9\nZEAQLg6jFr63dZBmQ2nl0Qk2k1zPEY3ltP7WKDn3MxEzy7Nrn8tMjSQOuVTWa4hE\nNY7gcGiGQig+sJ1BQ0IbYp40VfdNqqNBVMlRuBHk5upXsSKgtUC4Siw2yX8vUvaA\nozISrJ+VACn/i7zQzLZNdtqKUlgf/kjouKAA1Hua6hPfoT6VFygJcRHOkoNPVlrX\ngT1GvrXfck+ehT4GA+KOMplN8Qy4UoqLZZ8husbchgera5lVedS/dGcIPc0QCfyn\np5ktOVJJAgMBAAECgf8mY4o//+5M+jsWuMVniceq8fK3gI5Wk9483ztexF598kIQ\nOSOcdrOkeu31f2vv6QxJEv8pAjc35P335XPHxTc1DJPnefnF05pjUUXf2M0FVYbu\ncpH2qNDSWQcMvjCpJ2qeDv2BKMlaRGU1OTMXttOjCXoNwmsOn8lJY97HSDz62lAb\nu5Ms2QNDKJDLbmxEoSqOomsGrBqFCfuHocacHrRjHID0zug9/Dde6OT0Xn4Gv7qx\nENdIa8UhXXbLFeuCWbrPaaMUFq4WXHjV8c9iDjhpZx7wsdbnAENHqbA0LoPsAE7Q\nMxQjgxGOxr1TJeXx803CY2Xs8zb8XOhkuDpfIokCgYEA64UMUjVLl9D2LOaDINBC\nIP5TTOLT7Z1AqPDwdlMdxvFjr+TTaomku5CvhEGjAzhCwZogkEOQ0PO72xlyjP4L\nk0wNp2/HFlvfqDzsVvVM4BTvx4K+M5ZyHa9x+k6JiO0z3zXlmHeBXrQHDWj7ttFc\nrAuIx//aYcv+l1dEWziYlR0CgYEAx/TUlKwvH8s9rrzxnkFclbVj6lq21iJAjY3c\nBxOMO8LnRlvxjqxNaIlOc968rAeRNBnxekFyOfshDXDLnxLkeCO7lPzE147R1CAM\nvJHbrw836orgPZOJPJzCP23fjZ5BI6ccpn7YwlFq8DDp7po3+xiNbIDqBsIbBMy8\naqxMxh0CgYEAoXFmbMPTuZGn7kdlA40+h1dOypmCJJNyy1u9uZ5n/wNhDiWRNqp7\nnYckiUhk8cQTHpsET1/BWTp6P0pGV5edX672fRwGILGBstVwPHuR4tj3NI/OyZYL\nS4YEX0yOwqm2sP9FDyp8J+rIGs0oHr2NBPIzJMWhcQBg2GUdmlpFXZECgYAVsWQW\ntQ9vvZb1jB4SczjeLQ2n8SuA07p5IPjL87z1BtIcegEc32iOfMb8HyAM8c04/8+I\n2ezQiYQudxxAJ8aNmiLRqRKZ6C6vesKm+pQAy//e/C4TwBvVbZRNWVg1fwPGIG0l\nSwGtIzQc1tGqRyTnouRE7z90eD6CKMwQLp0tqQKBgCNaDAxvIST5diOfoUrmdTJF\nD7kzd7unUzmK54lEU/VliUAKi/qw8Og3044YgyVvAf7F7rzbwhw4xZOll+OOW/uk\ntZ3vzHsC1RhEj39hckh0hdBvUk+tp7BfdLpwSgmvYTCv3PzbzHFcm1h1EcJF+YD3\nc/eI2HG1XlWaYaPMeBeh\n-----END PRIVATE KEY-----\n",
           // key: process.env.AUTH_GOOGLE_KEY!,
           scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-        })
+        }),
       );
       await this.doc.loadInfo();
       await this._loadSheet(yyyymm);
