@@ -21,13 +21,13 @@ export class SpreadSheetOperator {
   // 初期化処理
   private async initialize(yyyymm: string) {
     try {
-      let key = process.env.AUTH_GOOGLE_KEY!;
-      key = key.replace(/\\n/g, "\n");
+      console.log(process.env.AUTH_GOOGLE_EMAIL!);
+      console.log(process.env.AUTH_GOOGLE_KEY!);
       this.doc = new GoogleSpreadsheet(
         process.env.AUTH_GOOGLE_SHEET_ID!,
         new JWT({
           email: process.env.AUTH_GOOGLE_EMAIL!,
-          key,
+          key: process.env.AUTH_GOOGLE_KEY!,
           scopes: ["https://www.googleapis.com/auth/spreadsheets"],
         }),
       );
