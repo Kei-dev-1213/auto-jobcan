@@ -33,9 +33,8 @@ jobs:
 
       - name: Set current month as env
         run: |
-          CURRENT_DATE=$(date +%Y-%m-15)
-          YYYYMM=$(date --date="$CURRENT_DATE month" +%Y%m)
-          echo "YYYYMM=$YYYYMM" >> $GITHUB_ENV
+          CURRENT_YYYYMM=$(date +%Y%m)
+          echo "CURRENT_YYYYMM=$CURRENT_YYYYMM" >> $GITHUB_ENV
 
-      - name: run batch process with last month arg
-        run: bun index.ts $YYYYMM
+      - name: run batch process with current month arg
+        run: bun index.ts $CURRENT_YYYYMM

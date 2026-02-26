@@ -31,10 +31,11 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Set current month as env
+      - name: Set last month as env
         run: |
-          CURRENT_YYYYMM=$(date +%Y%m)
-          echo "CURRENT_YYYYMM=$CURRENT_YYYYMM" >> $GITHUB_ENV
+          CURRENT_DATE=$(date +%Y-%m-15)
+          LAST_YYYYMM=$(date --date="$CURRENT_DATE -1 month" +%Y%m)
+          echo "LAST_YYYYMM=$LAST_YYYYMM" >> $GITHUB_ENV
 
-      - name: run batch process with current month arg
-        run: bun index.ts $CURRENT_YYYYMM
+      - name: run batch process with last month arg
+        run: bun index.ts $LAST_YYYYMM
