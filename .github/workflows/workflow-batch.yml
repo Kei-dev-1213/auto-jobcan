@@ -31,10 +31,17 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Decode Firebase service account key
+      - name: Decode Firebase service account key and export envs
         run: |
           echo "${{ secrets.ENCRYPTED_AUTH_GOOGLE_KEY }}" | base64 -d > ./google-key.json
-          echo "AUTH_GOOGLE_KEY=${{ github.workspace }}/google-key.json" >> $GITHUB_ENV
+          echo "AUTH_GOOGLE_EMAIL=$(jq -r .client_email google-key.json)" >> $GITHUB_ENV
+          key_escaped=$(python3 - <<'PY'
+          import json
+          cred=json.load(open('google-key.json'))
+          print(cred['private_key'].replace('\n','\\n'))
+          PY
+          )
+          echo "AUTH_GOOGLE_KEY=${key_escaped}" >> $GITHUB_ENV
 
       - name: run batch process
         run: bun index.ts
