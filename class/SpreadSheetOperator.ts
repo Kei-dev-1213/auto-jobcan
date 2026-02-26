@@ -21,8 +21,6 @@ export class SpreadSheetOperator {
   // 初期化処理
   private async initialize(yyyymm: string) {
     try {
-      console.log(process.env.AUTH_GOOGLE_EMAIL!);
-      console.log(process.env.AUTH_GOOGLE_KEY!);
       this.doc = new GoogleSpreadsheet(
         process.env.AUTH_GOOGLE_SHEET_ID!,
         new JWT({
