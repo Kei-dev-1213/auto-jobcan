@@ -3,6 +3,8 @@ name: Jobcan Current Month Execution
 env:
   #スプレッドシート認証情報
   AUTH_GOOGLE_EMAIL: ${{ secrets.AUTH_GOOGLE_EMAIL }}
+  AUTH_GOOGLE_KEY: ${{ secrets.AUTH_GOOGLE_KEY }}
+  AUTH_GOOGLE_SHEET_ID: ${{ secrets.AUTH_GOOGLE_SHEET_ID }}
   # ジョブカン情報
   JOBCAN_AUTH_COMPANY: ${{ secrets.JOBCAN_AUTH_COMPANY }}
   JOBCAN_AUTH_EMAIL: ${{ secrets.JOBCAN_AUTH_EMAIL }}
