@@ -1,4 +1,5 @@
 import puppeteer, { Browser, Page } from "puppeteer";
+import { CONSTANTS } from "./Constants";
 
 export class BrowserOperator {
   private browser: Browser | undefined;
@@ -34,33 +35,46 @@ export class BrowserOperator {
   }
 
   private async _loadPage() {
-    await this.page!.goto("https://ssl.jobcan.jp/login/mb-employee-global?redirect_to=%2Fm%2Findex");
+    await this.page!.goto(CONSTANTS.URL.JOBCAN.TOP);
   }
 
   // ログイン
   async login() {
     // 勤怠会社ID
-    await this.page!.waitForSelector("#client_id");
-    await this.page!.type("#client_id", process.env.JOBCAN_AUTH_COMPANY!);
+    await this.page!.waitForSelector(CONSTANTS.SELECTORS.INPUT.COMPANY_ID);
+    await this.page!.type(
+      CONSTANTS.SELECTORS.INPUT.COMPANY_ID,
+      process.env.JOBCAN_AUTH_COMPANY!,
+    );
     // メールアドレス
-    await this.page!.waitForSelector("#email");
-    await this.page!.type("#email", process.env.JOBCAN_AUTH_EMAIL!);
+    await this.page!.waitForSelector(CONSTANTS.SELECTORS.INPUT.EMAIL);
+    await this.page!.type(
+      CONSTANTS.SELECTORS.INPUT.EMAIL,
+      process.env.JOBCAN_AUTH_EMAIL!,
+    );
     // パスワード
-    await this.page!.waitForSelector("#password");
-    await this.page!.type("#password", process.env.JOBCAN_AUTH_PASSWORD!);
+    await this.page!.waitForSelector(CONSTANTS.SELECTORS.INPUT.PASSWORD);
+    await this.page!.type(
+      CONSTANTS.SELECTORS.INPUT.PASSWORD,
+      process.env.JOBCAN_AUTH_PASSWORD!,
+    );
 
     // ログイン
-    await this.page!.click("body > div.login-content > div > div > form > div:nth-child(6) > button");
+    await this.page!.click(CONSTANTS.SELECTORS.BUTTON.LOGIN);
   }
 
   // 特定の日付ページを開く
   async openSpecificDatePage(date: string) {
-    await this.page!.goto(`https://ssl.jobcan.jp/m/work/accessrecord?recordDay=${date}`);
+    await this.page!.goto(
+      `${CONSTANTS.URL.JOBCAN.SPECIFIC_DATE_PREFIX}${date}`,
+    );
   }
 
   // 特定の日付編集ページを開く
   async openSpecificDateEditPage(date: string) {
-    await this.page!.goto(`https://ssl.jobcan.jp/m/work/accessrecord?recordDay=${date}&_m=edit`);
+    await this.page!.goto(
+      `${CONSTANTS.URL.JOBCAN.SPECIFIC_DATE_PREFIX}${date}${CONSTANTS.URL.JOBCAN.SPECIFIC_DATE_SUFFIX}`,
+    );
   }
 
   // 打刻済かどうか
@@ -71,7 +85,9 @@ export class BrowserOperator {
     // 特定文言の有無
     if (
       !(await this.page!.evaluate(() => {
-        return document.body.innerText.includes("出退勤がありません。");
+        return document.body.innerText.includes(
+          CONSTANTS.MESSAGES.NO_WORK_MESSAGE,
+        );
       }))
     ) {
       return true;
@@ -88,7 +104,9 @@ export class BrowserOperator {
     // 特定文言の有無
     if (
       await this.page!.evaluate(() => {
-        return document.body.innerText.includes("この日付は打刻修正できません。");
+        return document.body.innerText.includes(
+          CONSTANTS.MESSAGES.CANNOT_MODIFY_MESSAGE,
+        );
       })
     ) {
       return true;
@@ -103,12 +121,12 @@ export class BrowserOperator {
     await this.openSpecificDateEditPage(date);
 
     // 開始時刻
-    await this.page!.waitForSelector("#time1");
-    await this.page!.type("#time1", sTime);
+    await this.page!.waitForSelector(CONSTANTS.SELECTORS.INPUT.START_TIME);
+    await this.page!.type(CONSTANTS.SELECTORS.INPUT.START_TIME, sTime);
     // 終了時刻
-    await this.page!.waitForSelector("#time2");
-    await this.page!.type("#time2", fTime);
+    await this.page!.waitForSelector(CONSTANTS.SELECTORS.INPUT.FINISH_TIME);
+    await this.page!.type(CONSTANTS.SELECTORS.INPUT.FINISH_TIME, fTime);
     // 打刻
-    await this.page!.click("#container > div:nth-child(7) > form > input[type=submit]:nth-child(11)");
+    await this.page!.click(CONSTANTS.SELECTORS.BUTTON.STAMP);
   }
 }
