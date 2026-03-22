@@ -1,27 +1,33 @@
 import puppeteer, { Browser, Page } from "puppeteer";
 
+const JOBCAN_BASE_URL = "https://ssl.jobcan.jp";
+const LOGIN_URL = `${JOBCAN_BASE_URL}/login/mb-employee-global?redirect_to=%2Fm%2Findex`;
+const RECORD_URL = (date: string) =>
+  `${JOBCAN_BASE_URL}/m/work/accessrecord?recordDay=${date}`;
+const RECORD_EDIT_URL = (date: string) =>
+  `${JOBCAN_BASE_URL}/m/work/accessrecord?recordDay=${date}&_m=edit`;
+
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 2000;
+
 export class BrowserOperator {
-  private browser: Browser | undefined;
-  private page: Page | undefined;
+  private browser: Browser;
+  private page: Page;
 
-  private constructor() {}
-
-  static async create(): Promise<BrowserOperator> {
-    const instance = new BrowserOperator();
-    await instance.initialize();
-    return instance;
+  private constructor(browser: Browser, page: Page) {
+    this.browser = browser;
+    this.page = page;
   }
 
-  // 初期化処理
-  private async initialize() {
+  static async create(): Promise<BrowserOperator> {
     try {
-      // this.browser = await puppeteer.launch({ headless: false, slowMo: 50 });
-      this.browser = await puppeteer.launch({
+      const browser = await puppeteer.launch({
         slowMo: 50,
-        args: ["--no-sandbox", "--disable-setuid-sandbox"], // サンドボックス無効化
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
       });
-      this.page = await this.browser.newPage();
-      await this._loadPage();
+      const page = await browser.newPage();
+      await page.goto(LOGIN_URL);
+      return new BrowserOperator(browser, page);
     } catch (e) {
       console.error("BrowserOperatorの初期化中にエラーが発生しました:", e);
       throw new Error("BrowserOperator初期処理でエラー");
@@ -29,98 +35,82 @@ export class BrowserOperator {
   }
 
   // 終了処理
-  finalize() {
-    this.browser!.close();
-  }
-
-  private async _loadPage() {
-    await this.page!.goto(
-      "https://ssl.jobcan.jp/login/mb-employee-global?redirect_to=%2Fm%2Findex",
-    );
+  async finalize(): Promise<void> {
+    await this.browser.close();
   }
 
   // ログイン
-  async login() {
-    // 勤怠会社ID
-    await this.page!.waitForSelector("#client_id");
-    await this.page!.type("#client_id", process.env.JOBCAN_AUTH_COMPANY!);
-    // メールアドレス
-    await this.page!.waitForSelector("#email");
-    await this.page!.type("#email", process.env.JOBCAN_AUTH_EMAIL!);
-    // パスワード
-    await this.page!.waitForSelector("#password");
-    await this.page!.type("#password", process.env.JOBCAN_AUTH_PASSWORD!);
+  async login(): Promise<void> {
+    const { JOBCAN_AUTH_COMPANY, JOBCAN_AUTH_EMAIL, JOBCAN_AUTH_PASSWORD } =
+      this.getJobcanCredentials();
 
-    // ログイン
-    await this.page!.click(
-      "body > div.login-content > div > div > form > div:nth-child(6) > button",
-    );
-  }
-
-  // 特定の日付ページを開く
-  async openSpecificDatePage(date: string) {
-    await this.page!.goto(
-      `${"https://ssl.jobcan.jp/m/work/accessrecord?recordDay="}${date}`,
-    );
-  }
-
-  // 特定の日付編集ページを開く
-  async openSpecificDateEditPage(date: string) {
-    await this.page!.goto(
-      `https://ssl.jobcan.jp/m/work/accessrecord?recordDay=${date}&_m=edit`,
-    );
+    await this.page.waitForSelector("#client_id");
+    await this.page.type("#client_id", JOBCAN_AUTH_COMPANY);
+    await this.page.waitForSelector("#email");
+    await this.page.type("#email", JOBCAN_AUTH_EMAIL);
+    await this.page.waitForSelector("#password");
+    await this.page.type("#password", JOBCAN_AUTH_PASSWORD);
+    await this.page.click('button[type="submit"]');
   }
 
   // 打刻済かどうか
-  async isStamped(_date: string) {
-    // 編集画面を開く
-    await this.openSpecificDatePage(_date);
-
-    // 特定文言の有無
-    if (
-      !(await this.page!.evaluate(() => {
-        return document.body.innerText.includes("出退勤がありません。");
-      }))
-    ) {
-      return true;
-    }
-
-    return false;
+  async isStamped(date: string): Promise<boolean> {
+    await this.page.goto(RECORD_URL(date));
+    const bodyText = await this.page.evaluate(() => document.body.innerText);
+    return !bodyText.includes("出退勤がありません。");
   }
 
   // 未来日かどうか
-  async isFutureDate(_date: string) {
-    // 編集画面を開く
-    await this.openSpecificDateEditPage(_date);
-
-    // 特定文言の有無
-    if (
-      await this.page!.evaluate(() => {
-        return document.body.innerText.includes(
-          "この日付は打刻修正できません。",
-        );
-      })
-    ) {
-      return true;
-    }
-
-    return false;
+  async isFutureDate(date: string): Promise<boolean> {
+    await this.page.goto(RECORD_EDIT_URL(date));
+    const bodyText = await this.page.evaluate(() => document.body.innerText);
+    return bodyText.includes("この日付は打刻修正できません。");
   }
 
-  // 打刻
-  async stamp(date: string, sTime: string, fTime: string) {
-    // 日付編集画面を開く
-    await this.openSpecificDateEditPage(date);
+  // 打刻（リトライ付き）
+  async stamp(
+    date: string,
+    startTime: string,
+    finishTime: string,
+  ): Promise<void> {
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        await this.page.goto(RECORD_EDIT_URL(date));
+        await this.page.waitForSelector("#time1");
+        await this.page.type("#time1", startTime);
+        await this.page.waitForSelector("#time2");
+        await this.page.type("#time2", finishTime);
+        await this.page.click('input[type="submit"]');
+        return;
+      } catch (e) {
+        console.warn(
+          `打刻処理に失敗しました（${attempt}/${MAX_RETRIES}回目）: ${date}`,
+          e,
+        );
+        if (attempt === MAX_RETRIES) {
+          throw new Error(`打刻処理が${MAX_RETRIES}回失敗しました: ${date}`);
+        }
+        await this.delay(RETRY_DELAY_MS);
+      }
+    }
+  }
 
-    // 開始時刻
-    await this.page!.waitForSelector("#time1");
-    await this.page!.type("#time1", sTime);
-    // 終了時刻
-    await this.page!.waitForSelector("#time2");
-    await this.page!.type("#time2", fTime);
-    // 打刻
-    await this.page!.click(
-      "#container > div:nth-child(7) > form > input[type=submit]:nth-child(11)",
-    );
+  // 環境変数のバリデーション
+  private getJobcanCredentials() {
+    const JOBCAN_AUTH_COMPANY = process.env.JOBCAN_AUTH_COMPANY;
+    const JOBCAN_AUTH_EMAIL = process.env.JOBCAN_AUTH_EMAIL;
+    const JOBCAN_AUTH_PASSWORD = process.env.JOBCAN_AUTH_PASSWORD;
+
+    if (!JOBCAN_AUTH_COMPANY || !JOBCAN_AUTH_EMAIL || !JOBCAN_AUTH_PASSWORD) {
+      throw new Error(
+        "ジョブカン認証情報の環境変数が不足しています: JOBCAN_AUTH_COMPANY, JOBCAN_AUTH_EMAIL, JOBCAN_AUTH_PASSWORD",
+      );
+    }
+
+    return { JOBCAN_AUTH_COMPANY, JOBCAN_AUTH_EMAIL, JOBCAN_AUTH_PASSWORD };
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
