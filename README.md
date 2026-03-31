@@ -107,31 +107,6 @@ auto-jobcan/
 いずれも手動実行（`workflow_dispatch`）にも対応しています。
 実行時に同様の環境変数が必要です。
 
-サンプル ジョブ:
-
-```yaml
-jobs:
-  Run-Batch-Process:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.1.18
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-      - name: Run auto-jobcan
-        run: bun index.ts
-        env:
-          AUTH_GOOGLE_SHEET_ID: ${{ secrets.AUTH_GOOGLE_SHEET_ID }}
-          AUTH_GOOGLE_EMAIL: ${{ secrets.AUTH_GOOGLE_EMAIL }}
-          AUTH_GOOGLE_KEY: ${{ secrets.AUTH_GOOGLE_KEY }}
-          JOBCAN_AUTH_COMPANY: ${{ secrets.JOBCAN_AUTH_COMPANY }}
-          JOBCAN_AUTH_EMAIL: ${{ secrets.JOBCAN_AUTH_EMAIL }}
-          JOBCAN_AUTH_PASSWORD: ${{ secrets.JOBCAN_AUTH_PASSWORD }}
-```
-
 ## ライセンス 📄
 
 MIT License
